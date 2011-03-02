@@ -11,22 +11,23 @@
 	$.delegate = function(name, prototype){
 		var names = name.split('.'),
 			namespace = names[0],
-			name = names[1],
-			_name = '_' + name;
-
-		$.widget(namespace + '.' + _name, prototype);
+			name = names[1];
 
 		$.fn[name] = function(){			
-			var $window = $(window),
-				instance = $window.data(_name);
+			if (this.selector){ // only string selectors
+				var selector = this.selector,
+					uid = name + selector.replace(/\.|\s/g, '_'),
+					$window = $(window),
+					instance = $window.data(uid);
 
-			if (!instance){
-				if (!this.selector)
-					return $.error('cannot initialize delegate on collection, must use string selector');
-				$[namespace][_name].prototype._selector = this.selector;
+				if (!instance){
+					$.widget(namespace + '.' + uid, prototype);
+					$[namespace][uid].prototype._selector = selector;
+				}
+
+				$window[uid].apply($window, arguments);
 			}
-
-			$window[_name].apply($window, arguments);
+			return this; 
 		}
 	}	
 })(jQuery);

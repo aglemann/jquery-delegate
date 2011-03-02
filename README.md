@@ -44,7 +44,6 @@ Those Things That Aren't Benefits
 --
 
 * Only intended for widgets that do not need to manipulate the DOM on creation. For that, better use plain old widgets.
-* Can only initialize a specific widget for a single selector. The current instance must be destroyed before the widget can be reinitialized for a different selector.
 
 How To Get Started
 --
