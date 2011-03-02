@@ -3,7 +3,7 @@
 
 jQuery UI Widgets are great, except they are implicitly bound to elements in the DOM which makes them hard to delegate - with *.live()* for example.
 
-One approach is to [wrap widget instances](http://enterprisejquery.com/2010/07/configuring-ui-widgets-and-interactions-with-live/) in delegates. This approach curries the widget factory to produce something that walks and talks like a widget, but is actually a delegate:
+One approach is to [wrap widget instances](http://enterprisejquery.com/2010/07/configuring-ui-widgets-and-interactions-with-live/) in delegates. Another approach - what we do here - curries the widget factory to produce something that walks and talks like a widget, but is actually a delegate:
 
 	$.delegate('namespace.example_widget', {
 		_create: function(){ ... }
