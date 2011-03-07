@@ -8,7 +8,7 @@
  * Requires: jQuery UI v1.8 or later
  */
 (function($){
-	$.delegate = function(name, prototype){
+	$.delegate = function(name, base, prototype){
 		var names = name.split('.'),
 			namespace = names[0],
 			name = names[1];
@@ -21,7 +21,7 @@
 					instance = $window.data(uid);
 
 				if (!instance){
-					$.widget(namespace + '.' + uid, prototype);
+					$.widget(namespace + '.' + uid, base, prototype);
 					$[namespace][uid].prototype._selector = selector;
 				}
 
