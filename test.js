@@ -3,12 +3,12 @@ String.prototype._uid = function(){ // helper to duplicate uid creation of plugi
 }
 
 var namespace = 'ui',
-	name = 'widget',
+	widgetName = 'widget',
 	instances;
 
 module('core', {
 	setup: function(){
-		$.delegate(namespace + '.' + name, {
+		$.delegate(namespace + '.' + widgetName, {
 			_create: function(){
 				instances = 0;
 			},
@@ -18,33 +18,33 @@ module('core', {
 		});
 	},
 	teardown: function(){
-		delete $.fn[name];
+		delete $.fn[widgetName];
 	}
 });
 
 test('create delegate', function(){
-	ok($.isFunction($.fn[name]), 'widget added to jQuery object');
+	ok($.isFunction($.fn[widgetName]), 'widget added to jQuery object');
 });
 
 test('instantiate delegate', function(){
 	var selector = '.class',
-		uid = (name + selector)._uid(), // widget_class
+		uid = (widgetName + selector)._uid(), // widget_class
 		$collection = $(selector),
-		$this = $collection[name](); // instantiate widget
+		$this = $collection[widgetName](); // instantiate widget
 	
-	ok($.data(window, uid), 'instance added to data for window');
+	ok($.data(document, uid), 'instance added to data for document');
 	equal($collection.selector, selector, 'collection has jQuery selector property');
 	equal($this, $collection, 'function returns jQuery context');
-	equal($.data(window, uid)._selector, selector, 'selector property set in instance');
+	equal($.data(document, uid)._selector, selector, 'selector property set in instance');
 
 	// cleanup
-	$collection[name]('destroy');
+	$collection[widgetName]('destroy');
 	ok(!$.data(window, uid), 'instance removed from data for window on destroy');
 });
 
 test('failed instance with no selector', function(){
 	var	$collection = $(document.getElementsByTagName('div')),
-		$this = $collection[name]();
+		$this = $collection[widgetName]();
 	
 	ok(!$collection.selector, 'collection has no selector property');
 	equal($this, $collection, 'jQuery context returned even though widget was not instantiated');
@@ -52,84 +52,113 @@ test('failed instance with no selector', function(){
 
 test('multiple instances', function(){
 	var selector1 = '#id',
-		uid1 = (name + selector1)._uid(), // widget#id
+		uid1 = (widgetName + selector1)._uid(), // widget#id
 		selector2 = '.class',
-		uid2 = (name + selector2)._uid(); // widget_class
+		uid2 = (widgetName + selector2)._uid(); // widget_class
 
-	$(selector1)[name]();
-	ok($.data(window, uid1), 'first instance added to data for window');
+	$(selector1)[widgetName]();
+	ok($.data(document, uid1), 'first instance added to data for document');
 	
-	$(selector2)[name]();
-	ok($.data(window, uid2), 'second instance added to data for window');	
+	$(selector2)[widgetName]();
+	ok($.data(document, uid2), 'second instance added to data for document');	
 
-	equal($.data(window, uid1)._selector, selector1, 'selector property set correctly for instance');
-	equal($.data(window, uid2)._selector, selector2, 'selector property set correctly for instance');
+	equal($.data(document, uid1)._selector, selector1, 'selector property set correctly for instance');
+	equal($.data(document, uid2)._selector, selector2, 'selector property set correctly for instance');
 
 	// cleanup
-	$(selector1)[name]('destroy');
-	ok(!$.data(window, uid1), 'first instance removed from data for window on destroy');
+	$(selector1)[widgetName]('destroy');
+	ok(!$.data(document, uid1), 'first instance removed from data for document on destroy');
 	
-	$(selector2)[name]('destroy');
-	ok(!$.data(window, uid2), 'second instance removed from data for window on destroy');	
+	$(selector2)[widgetName]('destroy');
+	ok(!$.data(document, uid2), 'second instance removed from data for document on destroy');	
 });
 
 test('re-instancing and method calls', function(){
 	var selector = '.class',
-		uid = (name + selector)._uid(); // widget_class
+		uid = (widgetName + selector)._uid(); // widget_class
 
-	$(selector)[name]();
-	ok($.data(window, uid), 'instance added to data for window');
+	$(selector)[widgetName]();
+	ok($.data(document, uid), 'instance added to data for document');
 	equal(instances, 1, 'instance count checks');
 
-	$(selector)[name](); // reinstance
+	$(selector)[widgetName](); // reinstance
 	equal(instances, 2, 'instance count incremented');
 
-	$(selector)[name]('disable'); // method call does not reinstance
-	ok($.data(window, uid).options.disabled, 'method call executed correctly');
+	$(selector)[widgetName]('disable'); // method call does not reinstance
+	ok($.data(document, uid).options.disabled, 'method call executed correctly');
 	equal(instances, 2, 'instance count unchanged');
 
-	$(selector)[name]({ disabled: false }); // reinstance with options
-	ok(!$.data(window, uid).options.disabled, 'option set correctly');
+	$(selector)[widgetName]({ disabled: false }); // reinstance with options
+	ok(!$.data(document, uid).options.disabled, 'option set correctly');
 	equal(instances, 3, 'instance count incremented');
 	
 	// cleanup
-	$(selector)[name]('destroy');
-	ok(!$.data(window, uid), 'instance removed from data for window on destroy');
+	$(selector)[widgetName]('destroy');
+	ok(!$.data(document, uid), 'instance removed from data for document on destroy');
 });
 
 test('multiple widgets', function(){
 	var namespace2 = namespace + 2,
-		name1 = name,
-		name2 = name + 2,		
+		widgetName1 = widgetName,
+		widgetName2 = widgetName + 2,		
 		selector1 = '#id',
 		selector2 = '.class',
-		uid1 = (name1 + selector1)._uid(), // widget#id
-		uid2 = (name2 + selector2)._uid(), // widget2_class
+		uid1 = (widgetName1 + selector1)._uid(), // widget#id
+		uid2 = (widgetName2 + selector2)._uid(), // widget2_class
 		value;
 		
-	$.delegate(namespace2 + '.' + name2, { // new widget2	
+	$.delegate(namespace2 + '.' + widgetName2, { // new widget2	
 		_create: function(){
 			value = 2;
 		}
 	});
 	
-	$(selector1)[name1](); // instantiate widget
-	$(selector2)[name2](); // instantiate widget2
+	$(selector1)[widgetName1](); // instantiate widget
+	$(selector2)[widgetName2](); // instantiate widget2
 	
-	ok($.data(window, uid1), 'first widget added to data for window');
-	equal($.data(window, uid1)._selector, selector1, 'selector property set correctly for instance');
+	ok($.data(document, uid1), 'first widget added to data for document');
+	equal($.data(document, uid1)._selector, selector1, 'selector property set correctly for instance');
 	equal(instances, 1, 'prototype is correct for instance');
 	
-	ok($.data(window, uid2), 'second widget added to data for window');
-	equal($.data(window, uid2)._selector, selector2, 'selector property set correctly for instance');
+	ok($.data(document, uid2), 'second widget added to data for document');
+	equal($.data(document, uid2)._selector, selector2, 'selector property set correctly for instance');
 	equal(value, 2, 'prototype is correct for instance');
 	
 	// cleanup
-	$(selector1)[name1]('destroy');
-	ok(!$.data(window, uid1), 'first widget removed from data for window on destroy');
+	$(selector1)[widgetName1]('destroy');
+	ok(!$.data(document, uid1), 'first widget removed from data for document on destroy');
 	
-	$(selector2)[name2]('destroy');
-	ok(!$.data(window, uid2), 'second widget removed from data for window on destroy');
+	$(selector2)[widgetName2]('destroy');
+	ok(!$.data(document, uid2), 'second widget removed from data for document on destroy');
 	
-	delete $.fn[name2];
+	delete $.fn[widgetName2];
+});
+
+test('widget methods', function(){
+	var widgetName2 = widgetName + 2,		
+		selector = '.class',
+		returnValues = {
+		    array: [1, 2, 3],
+		    collection: document.getElementsByTagName('div'),
+		    number: 1,
+		    object: {},
+		    string: 'string'
+		},
+		proto = {};
+		
+	$.each(returnValues, function(prop, val) {
+	    proto[prop] = function() {
+	        return returnValues[prop];
+	    }
+	});
+	$.delegate(namespace + '.' + widgetName2, proto);
+		
+	$(selector)[widgetName2](); // instantiate widget	
+	$.each(returnValues, function(prop, val) {
+	    deepEqual($(selector)[widgetName2](prop), val, 'public method returns value of type "' + prop + '"');
+	});
+	
+	// cleanup
+	$(selector)[widgetName2]('destroy');
+	delete $.fn[widgetName2];
 });
