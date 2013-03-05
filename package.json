@@ -15,7 +15,7 @@
   "name": "jquery-delegate",
   "repository": {
     "type": "git",
-    "url": "https://github.com/aglemann/i18n.git"
+    "url": "https://github.com/aglemann/jquery-delegate.git"
   },
   "scripts": {
     "test": "grunt test --verbose"
