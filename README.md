@@ -1,5 +1,8 @@
-[jQuery Delegate](https://github.com/aglemann/jquery-delegate/) - Delegation for your jQuery UI widgets
+[jQuery Delegate](https://github.com/aglemann/jquery-delegate/) ![Build Status](https://travis-ci.org/aglemann/jquery-delegate.png)
 ==
+
+Delegation for your jQuery UI widgets
+--
 
 jQuery UI Widgets are great, except they are implicitly bound to elements in the DOM which makes them hard to delegate - with **.live()** for example.
 

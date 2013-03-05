@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+	<title>QUnit Test Suite</title>
+	<link rel="stylesheet" href="../lib/qunit/qunit/qunit.css">
+ 	<script src="../lib/qunit/qunit/qunit.js"></script>
+  <script>
+    QUnit.config.autostart = false;
+    QUnit.config.testTimeout = 5000;
+    var require = {
+      baseUrl: '../',
+      callback: function() {
+        QUnit.load();
+        QUnit.start();
+      },
+      deps: [
+        'test/main'
+      ],
+      paths: {
+        'jquery': 'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min',
+        'jquery-ui': 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min'
+      },
+      shim: {
+        'jquery': { exports: 'jQuery' },
+        'jquery-ui': { deps: ['jquery'] }
+      },
+      urlArgs: +new Date(),
+      waitSeconds: 0
+    }
+  </script>
+  <script src="../lib/requirejs/require.js"></script>
+</head>
+<body>
+	<div id="qunit"></div>
+	<div id="qunit-fixture">test markup</div>
+</body>
+</html>

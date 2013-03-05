@@ -1,13 +1,7 @@
-/*
- * Delegation for your jQuery UI widgets
- * https://github.com/aglemann/jquery-delegate/
- * Copyright (c) 2011 Aeron Glemann
- * Version: 1.0 (02/29/2011)
- * Licensed under the MIT licenses:
- * http://www.opensource.org/licenses/mit-license.php
- * Requires: jQuery UI v1.8 or later
- */
-(function($) {
+define([
+    'jquery',
+    'jquery-ui'
+], function($) {
     $.delegate = function(name, base, prototype) {
         var names = name.split('.'),
             namespace = names[0],
@@ -37,6 +31,6 @@
                 returnValue = doc[uid].apply(doc, arguments);
             }
             return isMethodCall ? returnValue : this;
-        }
-    }
-})(jQuery);
+        };
+    };   
+});
